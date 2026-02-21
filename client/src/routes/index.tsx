@@ -1,10 +1,13 @@
-import Card from "./components/Card";
-import Map from "./components/Map";
-import Navbar from "./components/Navbar";
-import "./App.css";
+import { createFileRoute } from "@tanstack/react-router";
+import Card from "../components/Card";
+import Map from "../components/Map";
 import { useState } from "react";
 
-function App() {
+export const Route = createFileRoute("/")({
+  component: Home,
+});
+
+function Home() {
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
   const locations: {
@@ -43,10 +46,8 @@ function App() {
   };
   return (
     <div className="app">
-      <Navbar />
-
       {/* Main Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-[600px] p-6">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-150 p-6">
         {/* Spans 4 Cols */}
         <div className="md:col-span-4 bg-gray-100 p-4 rounded-lg">
           <Card locations={locations} onCardClick={handleClick} />
@@ -60,5 +61,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
