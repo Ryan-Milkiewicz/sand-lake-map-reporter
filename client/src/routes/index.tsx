@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type { Location } from "../types";
 import Card from "../components/Card";
-import { FormDialog } from "@/components/FormDialog";
+import { RequestForm } from "@/components/RequestForm";
 import Map from "../components/Map";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 
 export const Route = createFileRoute("/")({
@@ -13,7 +14,14 @@ function Home() {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
     null,
   );
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pickedPosition, setPickedPosition] = useState<[number, number] | null>(
+    null,
+  );
+
+  const handleMapClick = (lat: number, lng: number) => {
+    console.log("CLICKED MAP!!!");
+    setPickedPosition([lat, lng]);
+  };
 
   const locations: {
     name: string;
@@ -52,23 +60,42 @@ function Home() {
   return (
     <div className="app">
       {/* Main Grid */}
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="border-2 border-green-600 text-green-600 px-5 py-2 m-2 rounded-2xl font-medium hover:bg-green-600 hover:text-white transition-colors duration-200 cursor-pointer"
-      >
-        Submit Request
-      </button>
-      <FormDialog open={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-150 p-6">
         {/* Spans 4 Cols */}
         <div className="md:col-span-4 bg-gray-100 p-4 rounded-lg">
-          <Card locations={locations} onCardClick={handleClick} />
+          <Tabs defaultValue="current" className="w-100">
+            <TabsList>
+              <TabsTrigger
+                value="current"
+                className="rounded-full text-green-700 data-[state=active]:bg-green-600 data-[state=active]:text-white hover:bg-green-100 transition-colors"
+              >
+                Current Requests
+              </TabsTrigger>
+              <TabsTrigger
+                value="submit"
+                className="rounded-full text-green-700 data-[state=active]:bg-green-600 data-[state=active]:text-white hover:bg-green-100 transition-colors"
+              >
+                Submit Request
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="current">
+              <Card locations={locations} onCardClick={handleClick} />
+            </TabsContent>
+            <TabsContent value="submit">
+              <RequestForm pickedPosition={pickedPosition} />
+            </TabsContent>
+          </Tabs>
+          {/* <Card locations={locations} onCardClick={handleClick} /> */}
         </div>
 
         {/* Spans 8 Cols */}
         <div className="md:col-span-8 space-y-6">
-          <Map locations={locations} selectedLocation={selectedLocation} />
+          <Map
+            locations={locations}
+            selectedLocation={selectedLocation}
+            onMapClick={handleMapClick}
+          />
         </div>
       </div>
     </div>
