@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -19,14 +20,32 @@ import {
 import { Textarea } from "./ui/textarea";
 
 export function RequestForm({
-  //onPickLocation,
+  onSubmit,
   pickedPosition,
 }: {
-  //onPickLocation: () => void;
+  onSubmit: (values: {
+    requestType: string;
+    details: string;
+    position: [number, number] | null;
+  }) => void;
   pickedPosition: [number, number] | null;
 }) {
+  const [formValues, setFormValues] = useState({
+    requestType: "",
+    details: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ ...formValues, position: pickedPosition });
+  };
+
+  const handleReset = () => {
+    setFormValues({ requestType: "", details: "" });
+  };
+
   return (
-    <form className="p-4 space-y-1">
+    <form className="p-4 space-y-1" onSubmit={handleSubmit}>
       <FieldTitle className="text-green-700 text-lg font-semibold">
         Submit a Request
       </FieldTitle>
@@ -37,7 +56,12 @@ export function RequestForm({
       <FieldGroup className="space-y-4">
         <Field>
           <Label className="text-green-700 font-medium">Request Type</Label>
-          <Select>
+          <Select
+            value={formValues.requestType}
+            onValueChange={(value) =>
+              setFormValues({ ...formValues, requestType: value })
+            }
+          >
             <SelectTrigger className="w-full mt-1">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
@@ -65,14 +89,6 @@ export function RequestForm({
             readOnly
             className="bg-gray-50 text-gray-500 mt-1"
           />
-          {/* <Button
-            type="button"
-            variant="outline"
-            onClick={onPickLocation}
-            className="rounded-xl border-green-600 text-green-600 hover:bg-green-50 w-full mt-2"
-          >
-            📍 Pick Location on Map
-          </Button> */}
         </Field>
 
         <Field>
@@ -83,6 +99,10 @@ export function RequestForm({
             className="h-32 mt-1"
             id="details"
             placeholder="Add details here."
+            value={formValues.details}
+            onChange={(e) =>
+              setFormValues({ ...formValues, details: e.target.value })
+            }
           />
         </Field>
 
@@ -95,7 +115,9 @@ export function RequestForm({
               Submit
             </Button>
             <Button
+              type="button"
               variant="outline"
+              onClick={handleReset}
               className="rounded-xl flex-1 border-green-600 text-green-600 hover:bg-green-50"
             >
               Cancel
