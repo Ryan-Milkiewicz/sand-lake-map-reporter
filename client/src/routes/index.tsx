@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import type { Location } from "../types";
 import Card from "../components/Card";
+import { FormDialog } from "@/components/FormDialog";
 import Map from "../components/Map";
 import { useState } from "react";
 
@@ -8,7 +10,10 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
+    null,
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const locations: {
     name: string;
@@ -40,13 +45,21 @@ function Home() {
     },
   ];
 
-  const handleClick = (location: any) => {
+  const handleClick = (location: Location) => {
     console.log(location);
     setSelectedLocation(location);
   };
   return (
     <div className="app">
       {/* Main Grid */}
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="border-2 border-green-600 text-green-600 px-5 py-2 m-2 rounded-2xl font-medium hover:bg-green-600 hover:text-white transition-colors duration-200 cursor-pointer"
+      >
+        Submit Request
+      </button>
+      <FormDialog open={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-150 p-6">
         {/* Spans 4 Cols */}
         <div className="md:col-span-4 bg-gray-100 p-4 rounded-lg">

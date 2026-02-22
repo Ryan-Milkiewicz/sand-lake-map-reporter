@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
 import { Marker, Popup } from "react-leaflet";
+import type { Location } from "../types/index";
 
 export default function LocationMarker({
   location,
   selectedLocation,
 }: {
-  location: any;
-  selectedLocation: any;
+  location: Location;
+  selectedLocation: Location | null;
 }) {
   const markerRef = useRef<L.Marker>(null);
 

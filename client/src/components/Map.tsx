@@ -1,11 +1,11 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import LocationMarker from "./LocationMarker";
 import FlyToLocation from "./FlyToLocation";
-import type { MapLocation } from "../types/index";
+import type { Location } from "../types/index";
 import "leaflet/dist/leaflet.css";
 
 type MapProps = {
-  locations: MapLocation[];
+  locations: Location[];
   selectedLocation: Location | null;
 };
 
@@ -16,7 +16,7 @@ function Map({ locations, selectedLocation }: MapProps) {
     <MapContainer
       center={sandLake}
       zoom={15}
-      className="h-[600px] w-full rounded-lg"
+      className="h-150 w-full rounded-lg"
     >
       <TileLayer
         {...{
